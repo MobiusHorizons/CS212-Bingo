@@ -120,10 +120,19 @@ namespace Bingo
                 // dump command prints out the graph
                 else if (command == "dump")
                     rg.dump();
-
+				
+				else if (command == "orphans")
+					rg.printOrphans();
+				
+				else if (command == "bingo")
+					foreach (GraphNode n in rg.ShortestPath (commandWords[1],commandWords[2]))
+					{
+						Console.WriteLine(n.ToString());
+					}
+				
                 // illegal command
                 else
-                    Console.Write("\nLegal commands: read [filename], dump, show [personname],\n  friends [personname], exit\n");
+                    Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], exit\n");
             }
         }
 

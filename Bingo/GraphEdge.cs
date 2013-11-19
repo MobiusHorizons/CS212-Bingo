@@ -32,6 +32,10 @@ namespace Bingo
         {
             return toNode.Name();
         }
+		
+		public GraphNode ToNode(){
+			return toNode;
+		}
 
         // return string form of edge
         public override string ToString() 
@@ -39,6 +43,8 @@ namespace Bingo
             string result = fromNode.Name() + " --(" + label + ")--> " + toNode.Name();
             return result;
         }
+		
+		
     }
 }
 

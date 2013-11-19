@@ -69,5 +69,63 @@ namespace Bingo
                 Console.Write(n.ToString());
             }
         }
+		
+		public void printOrphans()
+		{
+			Console.WriteLine ("Orphans:");
+			foreach(GraphNode n in nodes)
+			{
+				if (n.GetEdges("parent").Count == 0)
+				Console.WriteLine("\t" + n.Name());
+			}
+		}
+		public List<GraphNode> ShortestPath(String F, String T){
+			// do a breadth first search to find the shortest path.
+			List<GraphNode> path = new List<GraphNode>();
+			List<List<GraphNode>> levels = new List<List<GraphNode>>();
+			List<GraphNode> level = new List<GraphNode>();
+			int levelCount = 0;
+			
+			
+			GraphNode From = GetNode (F);
+			GraphNode To = GetNode (T);
+			GraphNode Pointer;
+			
+			level.Add (From);
+			levels.Add (level);
+			
+			while (!(levels[levelCount].Contains(To)))
+			{
+				levelCount++;
+				level = new List<GraphNode>();
+				foreach(GraphNode n in levels[levelCount-1])
+				{
+					foreach (GraphEdge e in n.GetEdges())
+					{
+						level.Add (e.ToNode ());
+					}
+				}
+				levels.Add (level);
+			}
+			
+			// figure out path in reverse
+			path.Add (To);
+			while (path[path.Count-1] != From)
+			{
+				levelCount --;
+				foreach (GraphEdge e in path[path.Count-1].GetEdges())
+				{
+					if (levels[levelCount].Contains (e.ToNode()))
+					{
+						path.Add(e.ToNode ());
+						break;
+					}
+				}
+				
+			}
+			
+			path.Reverse();
+			return path;
+		}
     }
 }
