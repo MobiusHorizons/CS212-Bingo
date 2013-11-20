@@ -125,10 +125,23 @@ namespace Bingo
 					rg.printOrphans();
 				
 				else if (command == "bingo")
-					foreach (GraphNode n in rg.ShortestPath (commandWords[1],commandWords[2]))
+				{
+					
+					List<GraphNode> path =  rg.ShortestPath (commandWords[1],commandWords[2]);
+					if (path != null)
 					{
-						Console.WriteLine(n.ToString());
+						for (int i = 0; i < path.Count - 1; i ++)
+						{
+							foreach(GraphEdge e in path[i].GetEdges())
+							{
+								if (e.ToNode() == path[i+1])
+									Console.WriteLine (path[i].Name() + " is a " + e.Label() + " of " + e.To() );
+							}
+						}
 					}
+					else 
+						Console.WriteLine (commandWords[1] +" has no relation to " + commandWords[2]);
+				}
 				
                 // illegal command
                 else

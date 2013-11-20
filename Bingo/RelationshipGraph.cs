@@ -84,35 +84,56 @@ namespace Bingo
 			List<GraphNode> path = new List<GraphNode>();
 			List<List<GraphNode>> levels = new List<List<GraphNode>>();
 			List<GraphNode> level = new List<GraphNode>();
+			Dictionary<String,Boolean> seen = new Dictionary<String, Boolean>();
 			int levelCount = 0;
 			
 			
 			GraphNode From = GetNode (F);
 			GraphNode To = GetNode (T);
-			GraphNode Pointer;
 			
 			level.Add (From);
 			levels.Add (level);
-			
-			while (!(levels[levelCount].Contains(To)))
+			try{
+			while (true)
 			{
-				levelCount++;
+					Console.WriteLine ("levelCount = " + levels.Count);
 				level = new List<GraphNode>();
-				foreach(GraphNode n in levels[levelCount-1])
+				foreach(GraphNode n in levels[levels.Count-1])
 				{
 					foreach (GraphEdge e in n.GetEdges())
 					{
-						level.Add (e.ToNode ());
+						if (e.To() == T) // is this the end node?
+								goto EndBuild;
+						if (!seen.ContainsKey (e.To()))// Deduplication
+						{
+							level.Add (e.ToNode ());
+							seen.Add (e.To(),true);
+						}
 					}
 				}
 				levels.Add (level);
 			}
+			} catch (Exception e){
+				Console.WriteLine (e.Message);
+			}
+			
+		EndBuild:
+			int i = 0;
+			foreach (List<GraphNode> l in levels)
+			{
+				Console.WriteLine ("Level " + i++ + ":");
+				foreach(GraphNode n in l)
+					Console.WriteLine (n.ToString ());
+			}	
 			
 			// figure out path in reverse
 			path.Add (To);
-			while (path[path.Count-1] != From)
+			levelCount = levels.Count;
+			try{
+			while (path[path.Count-1] != From && levelCount > 0)
 			{
 				levelCount --;
+				Console.WriteLine ("DEBUG: levelCount = " + levelCount + ", path.Count = " + path.Count);
 				foreach (GraphEdge e in path[path.Count-1].GetEdges())
 				{
 					if (levels[levelCount].Contains (e.ToNode()))
@@ -123,7 +144,9 @@ namespace Bingo
 				}
 				
 			}
-			
+			} catch (Exception e){
+				Console.WriteLine (e.Message);
+			}
 			path.Reverse();
 			return path;
 		}
