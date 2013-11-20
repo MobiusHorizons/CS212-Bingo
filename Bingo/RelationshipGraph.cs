@@ -79,6 +79,7 @@ namespace Bingo
 				Console.WriteLine("\t" + n.Name());
 			}
 		}
+				
 		public List<GraphNode> ShortestPath(String F, String T){
 			// do a breadth first search to find the shortest path.
 			List<GraphNode> path = new List<GraphNode>();
@@ -86,17 +87,17 @@ namespace Bingo
 			List<GraphNode> level = new List<GraphNode>();
 			Dictionary<String,Boolean> seen = new Dictionary<String, Boolean>();
 			int levelCount = 0;
-			
-			
 			GraphNode From = GetNode (F);
 			GraphNode To = GetNode (T);
 			
+			if (From == null || To == null || From == To)
+				return null;
+			
 			level.Add (From);
 			levels.Add (level);
-			try{
 			while (true)
 			{
-					Console.WriteLine ("levelCount = " + levels.Count);
+				//	Console.WriteLine ("levelCount = " + levels.Count);
 				level = new List<GraphNode>();
 				foreach(GraphNode n in levels[levels.Count-1])
 				{
@@ -104,7 +105,7 @@ namespace Bingo
 					{
 						if (e.To() == T) // is this the end node?
 								goto EndBuild;
-						if (!seen.ContainsKey (e.To()))// Deduplication
+						if (!seen.ContainsKey(e.To()))// Deduplication
 						{
 							level.Add (e.ToNode ());
 							seen.Add (e.To(),true);
@@ -113,41 +114,41 @@ namespace Bingo
 				}
 				levels.Add (level);
 			}
-			} catch (Exception e){
-				Console.WriteLine (e.Message);
-			}
-			
 		EndBuild:
-//			int i = 0;
-//			foreach (List<GraphNode> l in levels)
-//			{
-//				Console.WriteLine ("Level " + i++ + ":");
-//				foreach(GraphNode n in l)
-//					Console.WriteLine (n.ToString ());
-//			}	
-			
 			// figure out path in reverse
 			path.Add (To);
-			levelCount = levels.Count;
+			levelCount = levels.Count-1;
 			try{
-			while (path[path.Count-1] != From && levelCount > 0)
-			{
-				levelCount --;
-				//Console.WriteLine ("DEBUG: levelCount = " + levelCount + ", path.Count = " + path.Count);
-				foreach (GraphEdge e in path[path.Count-1].GetEdges())
+				while (path[path.Count-1] != From && levelCount >= 0)
 				{
-					if (levels[levelCount].Contains (e.ToNode()))
+					
+					//Console.WriteLine ("DEBUG: levelCount = " + levelCount + ", path.Count = " + path.Count);
+					foreach (GraphEdge e in path[path.Count-1].GetEdges())
 					{
-						path.Add(e.ToNode ());
-						break;
+						if (levels[levelCount].Contains (e.ToNode()))
+						{
+							path.Add(e.ToNode ());
+							goto NextInWhile;
+						}
 					}
+					// if we got here then this node had no up edge, so we look for a down edge
+					foreach(GraphNode n in levels[levelCount]){
+						foreach(GraphEdge e in n.GetEdges()){
+							if (e.ToNode() == path[path.Count-1]){
+								path.Add(n);
+								goto NextInWhile;
+							}
+						}
+					}
+				NextInWhile: 	
+						levelCount --;	
 				}
-				
-			}
 			} catch (Exception e){
 				Console.WriteLine (e.Message);
 			}
 			path.Reverse();
+			if (path.Count == 1)
+				path = null;
 			return path;
 		}
 		

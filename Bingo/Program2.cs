@@ -132,10 +132,10 @@ namespace Bingo
 					{
 						for (int i = 1; i < path.Count; i ++)
 						{
-							foreach(GraphEdge e in path[i].GetEdges())
+							foreach(GraphEdge e in path[i-1].GetEdges())
 							{
-								if (e.ToNode() == path[i-1])
-									Console.WriteLine (path[i-1].Name() + " is a " + e.Label() + " of " + path[i].Name () );
+								if (e.ToNode() == path[i])
+									Console.WriteLine (path[i].Name() + " is a " + e.Label() + " of " + path[i-1].Name () );
 							}
 						}
 					}

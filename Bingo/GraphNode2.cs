@@ -36,7 +36,17 @@ namespace Bingo
         {
             return incidentEdges;
         }
-
+		
+		// return a list of all nodes connected to this node.
+		public List<GraphNode> ToNodes()
+		{
+			List<GraphNode> ret = new List<GraphNode>();
+			foreach (GraphEdge e in incidentEdges)
+				ret.Add (e.ToNode());
+			
+			return ret;
+		}
+		
         // return a list of outgoing edges of specified label
         public List<GraphEdge> GetEdges(string label)
         {
