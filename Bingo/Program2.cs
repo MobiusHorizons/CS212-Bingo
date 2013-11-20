@@ -135,7 +135,7 @@ namespace Bingo
 							foreach(GraphEdge e in path[i-1].GetEdges())
 							{
 								if (e.ToNode() == path[i])
-									Console.WriteLine (path[i].Name() + " is a " + e.Label() + " of " + path[i-1].Name () );
+									Console.WriteLine (path[i-1].Name() + " is a " + e.Label() + " of " + path[i].Name () );
 							}
 						}
 					}
