@@ -130,12 +130,12 @@ namespace Bingo
 					List<GraphNode> path =  rg.ShortestPath (commandWords[1],commandWords[2]);
 					if (path != null)
 					{
-						for (int i = 0; i < path.Count - 1; i ++)
+						for (int i = 1; i < path.Count; i ++)
 						{
 							foreach(GraphEdge e in path[i].GetEdges())
 							{
-								if (e.ToNode() == path[i+1])
-									Console.WriteLine (path[i].Name() + " is a " + e.Label() + " of " + e.To() );
+								if (e.ToNode() == path[i-1])
+									Console.WriteLine (path[i-1].Name() + " is a " + e.Label() + " of " + path[i].Name () );
 							}
 						}
 					}
@@ -143,6 +143,10 @@ namespace Bingo
 						Console.WriteLine (commandWords[1] +" has no relation to " + commandWords[2]);
 				}
 				
+				else if (command == "decendents")
+				{
+					rg.decendents(commandWords[1]);
+				}
                 // illegal command
                 else
                     Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], exit\n");

@@ -118,13 +118,13 @@ namespace Bingo
 			}
 			
 		EndBuild:
-			int i = 0;
-			foreach (List<GraphNode> l in levels)
-			{
-				Console.WriteLine ("Level " + i++ + ":");
-				foreach(GraphNode n in l)
-					Console.WriteLine (n.ToString ());
-			}	
+//			int i = 0;
+//			foreach (List<GraphNode> l in levels)
+//			{
+//				Console.WriteLine ("Level " + i++ + ":");
+//				foreach(GraphNode n in l)
+//					Console.WriteLine (n.ToString ());
+//			}	
 			
 			// figure out path in reverse
 			path.Add (To);
@@ -133,7 +133,7 @@ namespace Bingo
 			while (path[path.Count-1] != From && levelCount > 0)
 			{
 				levelCount --;
-				Console.WriteLine ("DEBUG: levelCount = " + levelCount + ", path.Count = " + path.Count);
+				//Console.WriteLine ("DEBUG: levelCount = " + levelCount + ", path.Count = " + path.Count);
 				foreach (GraphEdge e in path[path.Count-1].GetEdges())
 				{
 					if (levels[levelCount].Contains (e.ToNode()))
@@ -149,6 +149,47 @@ namespace Bingo
 			}
 			path.Reverse();
 			return path;
+		}
+		
+		public void decendents(String name){
+			GraphNode root = GetNode (name);
+			List<GraphNode> thisGeneration = new List<GraphNode>();
+			List<GraphNode> nextGeneration = new List<GraphNode>();
+			thisGeneration.Add (root);
+			Console.WriteLine ("Decendents of " + root.Name() + ":");
+			int generation = 0;
+			List<String> Strings = new List<String>();
+			
+			while (thisGeneration.Count > 0){
+				
+				
+				if (generation == 1)
+					Console.Write ("Children: ");
+				else if (generation > 1){
+					for (int i = generation; i > 2; i --){
+						Console.Write ("Great ");
+					}
+					Console.Write ("Grandchildren: ");
+				}
+				if (generation > 0)
+					Console.WriteLine (String.Join (", ", (String[]) Strings.ToArray() ));
+				
+				generation ++;
+				
+				Strings = new List<string>();
+				
+				foreach (GraphNode n in thisGeneration){
+					foreach (GraphEdge e in n.GetEdges("child"))
+					{
+						nextGeneration.Add (e.ToNode());
+						Strings.Add (e.To ());
+					}
+				}
+
+				thisGeneration = nextGeneration;
+				nextGeneration = new List<GraphNode>();
+			}
+			
 		}
     }
 }
