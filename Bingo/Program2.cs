@@ -154,7 +154,7 @@ namespace Bingo
 				}
                 // illegal command
                 else
-                    Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], Bingo [From] [To], Decendents [personname] exit\n");
+                    Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], Bingo [From] [To], Decendents [personname]\n  cousins [personname] [nth] [k removed], exit\n");
             }
         }
 
