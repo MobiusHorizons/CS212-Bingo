@@ -147,9 +147,14 @@ namespace Bingo
 				{
 					rg.decendents(commandWords[1]);
 				}
+				
+				else if (command=="cousins")
+				{
+					rg.cousins (commandWords[1],int.Parse (commandWords[2]),int.Parse(commandWords[3]));
+				}
                 // illegal command
                 else
-                    Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], exit\n");
+                    Console.Write("\nLegal commands: read [filename], dump, orphans, show [personname],\n  friends [personname], Bingo [From] [To], Decendents [personname] exit\n");
             }
         }
 

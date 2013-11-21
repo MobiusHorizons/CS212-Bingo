@@ -192,5 +192,77 @@ namespace Bingo
 			}
 			
 		}
+		
+		// cousins
+		public void cousins(String person,int n, int k){
+			n +=1;
+			Dictionary<String,bool> seen = new Dictionary<String, bool>();
+			Dictionary<GraphNode,bool> topLevel = new Dictionary<GraphNode,bool>();
+			Dictionary<GraphNode,bool> endLevel = new Dictionary<GraphNode,bool>();
+			if (GetNode(person) == null){
+				Console.WriteLine ("No such person: " + person);
+				return;
+			}
+			topLevel.Add (GetNode (person),true);
+			seen.Add (person,true);
+			for ( int i = 0; i < n + k; i ++){// go up n generations
+				Dictionary<GraphNode,bool> level = new Dictionary<GraphNode,bool>();
+				foreach (GraphNode gn in topLevel.Keys){
+					foreach (GraphEdge e in gn.GetEdges ("parent")){
+						if (!level.ContainsKey ( e.ToNode() ) )
+							level.Add (e.ToNode(),true);
+						if (i < n-1) // only do this up through the last generation
+							seen.Add (e.To(),true);
+					}
+				}
+				if (i == n-1 && k != 0)
+					endLevel = level;
+				topLevel = level;
+			}
+			
+			// now go get decendents on the n'th +- K generation
+			for (int i = 0; i < n ; i ++){
+				Dictionary<GraphNode,bool> level = new Dictionary<GraphNode,bool>();
+				foreach (GraphNode gn in topLevel.Keys){
+					if (seen.ContainsKey(gn.Name ()))
+					    continue;
+					if (!seen.ContainsKey (gn.Name()))
+						seen.Add (gn.Name(), true);
+					foreach (GraphEdge e in gn.GetEdges ("child")){
+						if (!level.ContainsKey ( e.ToNode() ) )
+							level.Add (e.ToNode(),true);
+					}
+				}
+				topLevel = level;
+			}
+			// now go get decendents on the n'th +- K generation
+			for (int i = 0; i < n +k ; i ++){
+				Dictionary<GraphNode,bool> level = new Dictionary<GraphNode,bool>();
+				foreach (GraphNode gn in endLevel.Keys){
+					if (seen.ContainsKey(gn.Name ()))
+					    continue;
+					if (!seen.ContainsKey (gn.Name()))
+						seen.Add (gn.Name(), true);
+					foreach (GraphEdge e in gn.GetEdges ("child")){
+						if (!level.ContainsKey ( e.ToNode() ) )
+							level.Add (e.ToNode(),true);
+					}
+				}
+				endLevel = level;
+			}
+			
+			
+			// print out results
+			List<String> printArray = new List<String>();
+			foreach(GraphNode gn in topLevel.Keys)
+				if (!seen.ContainsKey(gn.Name ()))
+					printArray.Add(gn.Name ());
+			foreach(GraphNode gn in endLevel.Keys)
+				if (!seen.ContainsKey(gn.Name ()))
+					printArray.Add(gn.Name ());
+				
+			
+			Console.WriteLine (String.Join (", ",(String[]) printArray.ToArray()) );
+		}
     }
 }
